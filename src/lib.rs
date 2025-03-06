@@ -9,8 +9,11 @@ pub mod logging;
 mod utils;
 mod args;
 mod config;
+pub(crate) mod conversion; 
 #[cfg(test)]
 mod testing;
+#[cfg(test)]
+mod conversion_tests;
 
 // Re-export Error and Result types
 pub use error::{Error, Result};
@@ -24,6 +27,3 @@ pub use args::{Flag, KeyValue, AllowedKeyValueFormats};
 
 // Re-export configuration types
 pub use config::{ParserConfig, ParserConfigBuilder};
-
-// Note: Logging macros are defined in the logging module and are automatically available
-// when the crate is imported

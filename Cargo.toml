@@ -24,7 +24,7 @@ colored = "2.0"
 default = []
 # Optional features can be added here
 serde = ["dep:serde"]
-# Note: log-mux feature is removed as the crate doesn't exist
+test-utils = []
 
 [dependencies.serde]
 version = "1.0"

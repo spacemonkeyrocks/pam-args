@@ -84,7 +84,7 @@ impl Clone for KeyValue {
 }
 
 /// Represents allowed formats for key-value pairs
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AllowedKeyValueFormats {
     /// KEY=VALUE format (e.g., "USER=admin")
     KeyValue,
@@ -97,6 +97,90 @@ pub enum AllowedKeyValueFormats {
     
     /// Convenience type for all formats
     KeyAll,
+}
+
+impl AllowedKeyValueFormats {
+    /// Returns whether this format is compatible with the given format
+    ///
+    /// # Arguments
+    ///
+    /// * `other` - The format to check for compatibility with
+    ///
+    /// # Returns
+    ///
+    /// true if this format is compatible with the other format
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pam_args::AllowedKeyValueFormats;
+    ///
+    /// assert!(AllowedKeyValueFormats::KeyAll.is_compatible_with(AllowedKeyValueFormats::KeyValue));
+    /// assert!(AllowedKeyValueFormats::KeyValue.is_compatible_with(AllowedKeyValueFormats::KeyValue));
+    /// assert!(!AllowedKeyValueFormats::KeyValue.is_compatible_with(AllowedKeyValueFormats::KeyOnly));
+    /// ```
+    pub fn is_compatible_with(&self, other: AllowedKeyValueFormats) -> bool {
+        match self {
+            AllowedKeyValueFormats::KeyAll => true,
+            _ => *self == other,
+        }
+    }
+    
+    /// Returns whether this format is compatible with any of the given formats
+    ///
+    /// # Arguments
+    ///
+    /// * `formats` - The formats to check for compatibility with
+    ///
+    /// # Returns
+    ///
+    /// true if this format is compatible with any of the given formats
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pam_args::AllowedKeyValueFormats;
+    ///
+    /// let formats = vec![
+    ///     AllowedKeyValueFormats::KeyValue,
+    ///     AllowedKeyValueFormats::KeyOnly,
+    /// ];
+    ///
+    /// assert!(AllowedKeyValueFormats::KeyAll.is_compatible_with_any(&formats));
+    /// assert!(AllowedKeyValueFormats::KeyValue.is_compatible_with_any(&formats));
+    /// assert!(AllowedKeyValueFormats::KeyOnly.is_compatible_with_any(&formats));
+    /// assert!(!AllowedKeyValueFormats::KeyEquals.is_compatible_with_any(&formats));
+    /// ```
+    pub fn is_compatible_with_any(&self, formats: &[AllowedKeyValueFormats]) -> bool {
+        formats.iter().any(|format| {
+            if *format == AllowedKeyValueFormats::KeyAll {
+                return true;
+            }
+            self.is_compatible_with(*format)
+        })
+    }
+    
+    /// Returns all possible formats
+    ///
+    /// # Returns
+    ///
+    /// A vector of all possible formats
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pam_args::AllowedKeyValueFormats;
+    ///
+    /// let all_formats = AllowedKeyValueFormats::all();
+    /// assert_eq!(all_formats.len(), 3); // KeyValue, KeyOnly, KeyEquals
+    /// ```
+    pub fn all() -> Vec<AllowedKeyValueFormats> {
+        vec![
+            AllowedKeyValueFormats::KeyValue,
+            AllowedKeyValueFormats::KeyOnly,
+            AllowedKeyValueFormats::KeyEquals,
+        ]
+    }
 }
 
 impl Flag {
@@ -383,22 +467,12 @@ impl KeyValue {
     /// # Returns
     ///
     /// The key-value pair with the type converter set
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use pam_args::KeyValue;
-    /// use std::str::FromStr;
-    ///
-    /// let kv = KeyValue::new("WIDTH", "Width in pixels")
-    ///     .type_converter(i32::from_str);
-    /// ```
     pub fn type_converter<T, E>(mut self, _converter: fn(&str) -> std::result::Result<T, E>) -> Self
     where
         T: 'static + std::any::Any,
         E: std::fmt::Display,
     {
-        // For simplicity, we're just setting a flag to indicate that a type converter was set
+        // Set the flag to indicate that a type converter was set
         self.has_type_converter = true;
         self
     }
