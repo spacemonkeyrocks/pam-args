@@ -1,0 +1,32 @@
+[package]
+name = "pam-args"
+version = "0.1.0"
+edition = "2021"
+authors = ["Space Monkey Rocks <itsme@spacemonkey.rocks>"]
+description = "A library for parsing PAM module arguments"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/spacemonkeyrocks/pam-args"
+keywords = ["pam", "authentication", "linux", "security"]
+categories = ["authentication", "os::unix-apis"]
+
+[dependencies]
+log = "0.4"
+
+[dev-dependencies]
+# For testing, you might want to add:
+# criterion = "0.3"
+
+[features]
+default = []
+# Optional features can be added here
+serde = ["dep:serde"]
+
+[dependencies.serde]
+version = "1.0"
+optional = true
+features = ["derive"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
