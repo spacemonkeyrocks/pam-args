@@ -18,6 +18,7 @@ env_logger = "0.10"
 [dev-dependencies]
 # For testing, you might want to add:
 # criterion = "0.3"
+colored = "2.0"
 
 [features]
 default = []

@@ -7,6 +7,8 @@
 mod error;
 pub mod logging;
 mod utils;
+#[cfg(test)]
+mod testing;
 
 // Re-export Error and Result types
 pub use error::{Error, Result};
