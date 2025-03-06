@@ -1264,8 +1264,6 @@ fn validate_argument(arg: &str) -> Result<(), Error> {
 | 19 | Custom Options | `init::with_options(&custom_options)` | Logger configured per options | Test custom options |
 | 20 | Feature Control | Enable/disable the log-mux feature | Appropriate fallback behavior | Test feature flags |
 
-
-
 The logging system should be tested in integration with other components to ensure correct end-to-end behavior. Integration tests should focus on:
 
 1. **Tokenizer Integration**

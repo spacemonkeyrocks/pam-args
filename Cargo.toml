@@ -12,6 +12,8 @@ categories = ["authentication", "os::unix-apis"]
 
 [dependencies]
 log = "0.4"
+syslog = "6.0"
+env_logger = "0.10"
 
 [dev-dependencies]
 # For testing, you might want to add:
@@ -21,6 +23,7 @@ log = "0.4"
 default = []
 # Optional features can be added here
 serde = ["dep:serde"]
+# Note: log-mux feature is removed as the crate doesn't exist
 
 [dependencies.serde]
 version = "1.0"
