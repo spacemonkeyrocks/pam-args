@@ -11,6 +11,7 @@ mod args;
 mod config;
 pub(crate) mod conversion;
 mod storage;
+mod tokenizer;
 #[cfg(test)]
 mod testing;
 #[cfg(test)]
