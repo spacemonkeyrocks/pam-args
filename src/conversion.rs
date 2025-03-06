@@ -140,6 +140,22 @@ pub(crate) mod format {
     /// # Returns
     ///
     /// The detected format, key, and value (if applicable)
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// use crate::conversion::format;
+    /// use crate::AllowedKeyValueFormats;
+    ///
+    /// let result = format::detect("USER=admin");
+    /// assert_eq!(result.format, AllowedKeyValueFormats::KeyValue);
+    /// assert_eq!(result.key, "USER");
+    /// assert_eq!(result.value, Some("admin".to_string()));
+    ///
+    /// let result = format::detect("DEBUG");
+    /// assert_eq!(result.format, AllowedKeyValueFormats::KeyOnly);
+    /// assert_eq!(result.key, "DEBUG");
+    /// assert_eq!(result.value, None);
     /// ```
     pub(crate) fn detect(input: &str) -> FormatDetectionResult {
         // Check for KEY=VALUE format
@@ -309,6 +325,20 @@ pub mod converter {
     /// # Returns
     ///
     /// The converted value or an error
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// use crate::converter;
+    ///
+    /// let i: i32 = converter::convert("123", None)?;
+    /// assert_eq!(i, 123);
+    ///
+    /// let b: bool = converter::convert("true", None)?;
+    /// assert!(b);
+    ///
+    /// let s: String = converter::convert("hello", None)?;
+    /// assert_eq!(s, "hello");
     /// ```
     pub fn convert<T: FromArgValue>(
         value: &str,
@@ -374,6 +404,15 @@ pub mod converter {
     /// # Returns
     ///
     /// A function that converts a string to the target type using FromStr
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// use crate::converter;
+    /// use crate::KeyValue;
+    ///
+    /// let kv = KeyValue::new("WIDTH", "Width in pixels")
+    ///     .type_converter(converter::from_str::<i32>());
     /// ```
     pub fn from_str<T: FromStr + 'static>() -> fn(&str) -> std::result::Result<T, T::Err> {
         T::from_str

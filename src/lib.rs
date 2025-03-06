@@ -9,11 +9,14 @@ pub mod logging;
 mod utils;
 mod args;
 mod config;
-pub(crate) mod conversion; 
+pub(crate) mod conversion;
+mod storage;
 #[cfg(test)]
 mod testing;
 #[cfg(test)]
 mod conversion_tests;
+#[cfg(test)]
+mod storage_tests;
 
 // Re-export Error and Result types
 pub use error::{Error, Result};
@@ -27,3 +30,6 @@ pub use args::{Flag, KeyValue, AllowedKeyValueFormats};
 
 // Re-export configuration types
 pub use config::{ParserConfig, ParserConfigBuilder};
+
+// Re-export storage module public API
+pub use storage::{KeyValueStore, DefaultKeyValueStore, NonArgTextStore, KeyValueStoreExt, FromArgValue};

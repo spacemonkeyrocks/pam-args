@@ -467,6 +467,15 @@ impl KeyValue {
     /// # Returns
     ///
     /// The key-value pair with the type converter set
+    ///
+    /// # Examples
+    ///
+    /// ```ignore
+    /// use pam_args::{KeyValue, from_str};
+    ///
+    /// let kv = KeyValue::new("WIDTH", "Width in pixels")
+    ///     .type_converter(converter::from_str::<i32>());
+    /// ```
     pub fn type_converter<T, E>(mut self, _converter: fn(&str) -> std::result::Result<T, E>) -> Self
     where
         T: 'static + std::any::Any,
